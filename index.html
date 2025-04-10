@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ISEEFOOD</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background: #f2f2f2; }
+    header { background-color: #00796B; color: white; padding: 30px 20px; text-align: center; }
+    nav { background-color: #004D40; padding: 10px 0; text-align: center; }
+    nav a { color: white; margin: 0 20px; text-decoration: none; font-weight: bold; }
+    nav a:hover { text-decoration: underline; }
+    section { padding: 40px 20px; max-width: 1000px; margin: auto; background: white; margin-top: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { color: #00796B; }
+    #map { height: 400px; width: 100%; border-radius: 10px; margin-top: 20px; }
+    input[type="text"] { padding: 12px; width: 100%; max-width: 500px; border: 1px solid #ccc; border-radius: 5px; }
+    footer { text-align: center; padding: 20px; background: #004D40; color: white; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ISEEFOOD</h1>
+    <p>Find where your favorite seafood is located in your area!</p>
+  </header>
+
+  <nav>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+    <a href="#map-section">Map</a>
+  </nav>
+
+  <section id="about">
+    <h2>About ISEEFOOD</h2>
+    <p>ISEEFOOD helps you locate available seafoods such as alimango, hipon, isda, and more within your municipality. Just type what you're looking for and we’ll show you where to find it.</p>
+  </section>
+
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <p>Email: iseefood@example.com</p>
+    <p>Phone: 0912-345-6789</p>
+  </section>
+
+  <section id="map-section">
+    <h2>Find Seafood</h2>
+    <input type="text" id="searchBox" placeholder="Search seafood (e.g. alimango)...">
+    <div id="map"></div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 ISEEFOOD. All rights reserved.</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const seafoodData = [
+      { name: "Alimango", lat: 10.3157, lng: 123.8854 },
+      { name: "Hipon", lat: 10.3176, lng: 123.9058 },
+      { name: "Isda", lat: 10.3112, lng: 123.8987 },
+    ];
+
+    const map = L.map('map').setView([10.3157, 123.8854], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const markers = [];
+
+    seafoodData.forEach(item => {
+      const marker = L.marker([item.lat, item.lng]).addTo(map)
+        .bindPopup(`<b>${item.name}</b>`);
+      markers.push({ name: item.name.toLowerCase(), marker });
+    });
+
+    document.getElementById('searchBox').addEventListener('input', function(e) {
+      const query = e.target.value.toLowerCase();
+      markers.forEach(item => {
+        if (item.name.includes(query)) {
+          item.marker.setOpacity(1);
+          item.marker.openPopup();
+        } else {
+          item.marker.setOpacity(0.2);
+          item.marker.closePopup();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
